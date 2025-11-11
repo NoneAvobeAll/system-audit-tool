@@ -15,11 +15,9 @@
 
 [Features](#-features) • [Installation](#-installation) • [How to Run](#-how-to-run-this-script) • [Usage](#-usage) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
-
+<img src="image.png" alt="Windows Server Audit Tool" width="600"/>
 
 </div>
-
-<img src="image.png" alt="Windows Server Audit Tool" width="600"/>
 
 ---
 
