@@ -3,7 +3,7 @@
     Windows System Slowness Audit Tool - Enhanced Edition
 .DESCRIPTION
     Advanced performance audit tool for diagnosing system slowness on Windows servers, laptops, and desktops.
-    Developed by: Abubakkar - System Engineer | Cybersecurity Researcher
+    Developed by: Abubakkar Khan - System Engineer | Cybersecurity Researcher
 .VERSION
     1.0.3
 #>
@@ -20,7 +20,7 @@ function Show-Banner {
     Write-Host "║                                                                       ║" -ForegroundColor Cyan
     Write-Host "║          WINDOWS SYSTEM SLOWNESS AUDIT TOOL v1.0.3                    ║" -ForegroundColor Yellow
     Write-Host "║                                                                       ║" -ForegroundColor Cyan
-    Write-Host "║          Developed By: Abubakkar khan                                 ║" -ForegroundColor Green
+    Write-Host "║          Developed By: Abubakkar Khan                                 ║" -ForegroundColor Green
     Write-Host "║          System Engineer | Cybersecurity Researcher                   ║" -ForegroundColor Green
     Write-Host "║                                                                       ║" -ForegroundColor Cyan
     Write-Host "╚═══════════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
@@ -42,7 +42,7 @@ function Show-Menu {
     Write-Host "  [10] Temperature and Hardware Health (WMI)" -ForegroundColor White
     Write-Host ""
     Write-Host "  ===== ADVANCED DIAGNOSTICS (NEW) =====" -ForegroundColor Yellow
-    Write-Host "  [13] Pagefile and Virtual Memory Analysis" -ForegroundColor Cyan
+    Write-Host "  [13] PageFile and Virtual Memory Analysis" -ForegroundColor Cyan
     Write-Host "  [14] System Uptime and Boot Performance" -ForegroundColor Cyan
     Write-Host "  [15] Network Latency and Packet Loss Test" -ForegroundColor Cyan
     Write-Host "  [16] Antivirus and Windows Defender Impact" -ForegroundColor Cyan
@@ -76,7 +76,7 @@ function Get-CPUUsage {
         $cpuQueue = (Get-Counter '\System\Processor Queue Length').CounterSamples.CookedValue
         Write-Host "CPU Queue Len  : $cpuQueue" -ForegroundColor $(if($cpuQueue -gt 5){"Red"}elseif($cpuQueue -gt 2){"Yellow"}else{"Green"})
         if($cpuQueue -gt 5) {
-            Write-Host "[WARNING] High CPU queue indicates CPU bottleneck" -ForegroundColor Red
+            Write-Host "(WARNING) High CPU queue indicates CPU bottleneck" -ForegroundColor Red
         }
     } catch {}
     
@@ -84,11 +84,11 @@ function Get-CPUUsage {
     Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 ProcessName, CPU, Id | Format-Table -AutoSize
     
     if($cpuLoad -gt 80) {
-        Write-Host "[WARNING] CPU usage is critically high (greater than 80 percent)" -ForegroundColor Red
+        Write-Host "(WARNING) CPU usage is critically high (greater than 80 percent)" -ForegroundColor Red
     } elseif($cpuLoad -gt 60) {
-        Write-Host "[CAUTION] CPU usage is elevated (greater than 60 percent)" -ForegroundColor Yellow
+        Write-Host "(CAUTION) CPU usage is elevated (greater than 60 percent)" -ForegroundColor Yellow
     } else {
-        Write-Host "[OK] CPU usage is within normal range" -ForegroundColor Green
+        Write-Host "(OK) CPU usage is within normal range" -ForegroundColor Green
     }
 }
 
@@ -123,11 +123,11 @@ function Get-MemoryUsage {
     Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10 ProcessName, @{Name="Memory(MB)";Expression={[math]::Round($_.WorkingSet / 1MB, 2)}}, Id | Format-Table -AutoSize
     
     if($usagePercent -gt 90) {
-        Write-Host "[CRITICAL] Memory usage is critically high (greater than 90 percent)" -ForegroundColor Red
+        Write-Host "(CRITICAL) Memory usage is critically high (greater than 90 percent)" -ForegroundColor Red
     } elseif($usagePercent -gt 75) {
-        Write-Host "[WARNING] Memory usage is high (greater than 75 percent)" -ForegroundColor Yellow
+        Write-Host "(WARNING) Memory usage is high (greater than 75 percent)" -ForegroundColor Yellow
     } else {
-        Write-Host "[OK] Memory usage is within acceptable range" -ForegroundColor Green
+        Write-Host "(OK) Memory usage is within acceptable range" -ForegroundColor Green
     }
 }
 
@@ -151,9 +151,9 @@ function Get-DiskPerformance {
         Write-Host "Usage Percent  : $usagePercent%" -ForegroundColor $(if($usagePercent -gt 90){"Red"}elseif($usagePercent -gt 80){"Yellow"}else{"Green"})
         
         if($usagePercent -gt 90) {
-            Write-Host "[CRITICAL] Disk space critically low (less than 10 percent free)" -ForegroundColor Red
+            Write-Host "(CRITICAL) Disk space critically low (less than 10 percent free)" -ForegroundColor Red
         } elseif($usagePercent -gt 80) {
-            Write-Host "[WARNING] Disk space low (less than 20 percent free)" -ForegroundColor Yellow
+            Write-Host "(WARNING) Disk space low (less than 20 percent free)" -ForegroundColor Yellow
         }
     }
     
@@ -170,10 +170,10 @@ function Get-DiskPerformance {
         Write-Host "Disk Queue Len : $([math]::Round($diskQueue, 2))" -ForegroundColor $(if($diskQueue -gt 2){"Red"}elseif($diskQueue -gt 1){"Yellow"}else{"Green"})
         
         if($diskQueue -gt 2) {
-            Write-Host "[WARNING] High disk queue indicates I/O bottleneck" -ForegroundColor Red
+            Write-Host "(WARNING) High disk queue indicates I/O bottleneck" -ForegroundColor Red
         }
     } catch {
-        Write-Host "[INFO] Unable to retrieve disk I/O performance data" -ForegroundColor Yellow
+        Write-Host "(INFO) Unable to retrieve disk I/O performance data" -ForegroundColor Yellow
     }
 }
 
@@ -209,9 +209,9 @@ function Get-NetworkPerformance {
     Write-Host "`nNetwork Connectivity Test:" -ForegroundColor Cyan
     $testConnection = Test-Connection -ComputerName "8.8.8.8" -Count 2 -Quiet
     if($testConnection) {
-        Write-Host "[OK] Internet connectivity: OK" -ForegroundColor Green
+        Write-Host "(OK) Internet connectivity: OK" -ForegroundColor Green
     } else {
-        Write-Host "[FAILED] Internet connectivity: FAILED" -ForegroundColor Red
+        Write-Host "(FAILED) Internet connectivity: FAILED" -ForegroundColor Red
     }
     
     Write-Host "`nActive Network Connections (ESTABLISHED):" -ForegroundColor Cyan
@@ -251,9 +251,9 @@ function Get-ServicesStatus {
     $stoppedServices = Get-Service | Where-Object {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped"}
     if ($stoppedServices.Count -gt 0) {
         $stoppedServices | Select-Object -First 20 DisplayName, Name, Status, StartType | Format-Table -AutoSize
-        Write-Host "[INFO] Found $($stoppedServices.Count) stopped services with Automatic start type" -ForegroundColor Yellow
+        Write-Host "(INFO) Found $($stoppedServices.Count) stopped services with Automatic start type" -ForegroundColor Yellow
     } else {
-        Write-Host "[OK] All automatic services are running" -ForegroundColor Green
+        Write-Host "(OK) All automatic services are running" -ForegroundColor Green
     }
 }
 
@@ -267,18 +267,18 @@ function Get-EventLogErrors {
     $systemErrors = Get-EventLog -LogName System -EntryType Error -After $startTime -ErrorAction SilentlyContinue | Select-Object -First 20
     if ($systemErrors) {
         $systemErrors | Select-Object TimeGenerated, Source, EventID, Message | Format-Table -AutoSize -Wrap
-        Write-Host "[INFO] Found $($systemErrors.Count) system errors" -ForegroundColor Yellow
+        Write-Host "(INFO) Found $($systemErrors.Count) system errors" -ForegroundColor Yellow
     } else {
-        Write-Host "[OK] No system errors in the last 24 hours" -ForegroundColor Green
+        Write-Host "(OK) No system errors in the last 24 hours" -ForegroundColor Green
     }
     
     Write-Host "`nApplication Errors:" -ForegroundColor Cyan
     $appErrors = Get-EventLog -LogName Application -EntryType Error -After $startTime -ErrorAction SilentlyContinue | Select-Object -First 20
     if ($appErrors) {
         $appErrors | Select-Object TimeGenerated, Source, EventID, Message | Format-Table -AutoSize -Wrap
-        Write-Host "[INFO] Found $($appErrors.Count) application errors" -ForegroundColor Yellow
+        Write-Host "(INFO) Found $($appErrors.Count) application errors" -ForegroundColor Yellow
     } else {
-        Write-Host "[OK] No application errors in the last 24 hours" -ForegroundColor Green
+        Write-Host "(OK) No application errors in the last 24 hours" -ForegroundColor Green
     }
 }
 
@@ -325,9 +325,9 @@ function Get-StartupPrograms {
         }
     }
     
-    Write-Host "`n[INFO] Total startup items found: $startupCount" -ForegroundColor Cyan
+    Write-Host "`n(INFO) Total startup items found: $startupCount" -ForegroundColor Cyan
     if($startupCount -gt 15) {
-        Write-Host "[WARNING] High number of startup items may slow boot time" -ForegroundColor Yellow
+        Write-Host "(WARNING) High number of startup items may slow boot time" -ForegroundColor Yellow
     }
 }
 
@@ -343,10 +343,10 @@ function Get-WindowsUpdateStatus {
         $updates = $searchResult.Updates
         
         if ($updates.Count -gt 0) {
-            Write-Host "[INFO] Found $($updates.Count) pending updates" -ForegroundColor Yellow
+            Write-Host "(INFO) Found $($updates.Count) pending updates" -ForegroundColor Yellow
             $updates | Select-Object -First 10 Title | Format-Table -AutoSize
         } else {
-            Write-Host "[OK] System is up to date" -ForegroundColor Green
+            Write-Host "(OK) System is up to date" -ForegroundColor Green
         }
         
         # Check last update installation time
@@ -358,7 +358,7 @@ function Get-WindowsUpdateStatus {
             Write-Host "Description: $($lastUpdate.Description)" -ForegroundColor White
         }
     } catch {
-        Write-Host "[ERROR] Unable to check Windows Update status: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "(ERROR) Unable to check Windows Update status: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
@@ -387,7 +387,7 @@ function Get-HardwareHealth {
             Write-Host "Media Type     : $($disk.MediaType)" -ForegroundColor White
         }
     } catch {
-        Write-Host "[INFO] Unable to retrieve physical disk health" -ForegroundColor Yellow
+        Write-Host "(INFO) Unable to retrieve physical disk health" -ForegroundColor Yellow
     }
     
     Write-Host "`nTemperature Monitoring:" -ForegroundColor Cyan
@@ -399,10 +399,10 @@ function Get-HardwareHealth {
                 Write-Host "Thermal Zone   : $celsius C" -ForegroundColor $(if($celsius -gt 80){"Red"}elseif($celsius -gt 70){"Yellow"}else{"Green"})
             }
         } else {
-            Write-Host "[INFO] Temperature monitoring not available via WMI" -ForegroundColor Cyan
+            Write-Host "(INFO) Temperature monitoring not available via WMI" -ForegroundColor Cyan
         }
     } catch {
-        Write-Host "[INFO] Temperature data not accessible on this system" -ForegroundColor Cyan
+        Write-Host "(INFO) Temperature data not accessible on this system" -ForegroundColor Cyan
     }
 }
 
@@ -425,11 +425,11 @@ function Get-PageFileAnalysis {
             Write-Host "Usage Percent  : $usagePercent%" -ForegroundColor $(if($usagePercent -gt 80){"Red"}elseif($usagePercent -gt 60){"Yellow"}else{"Green"})
             
             if($usagePercent -gt 80) {
-                Write-Host "[WARNING] PageFile usage is high - consider increasing size" -ForegroundColor Red
+                Write-Host "(WARNING) PageFile usage is high - consider increasing size" -ForegroundColor Red
             }
         }
     } else {
-        Write-Host "[INFO] No PageFile detected (system-managed or disabled)" -ForegroundColor Cyan
+        Write-Host "(INFO) No PageFile detected (system-managed or disabled)" -ForegroundColor Cyan
     }
     
     # Virtual Memory Stats
@@ -459,7 +459,7 @@ function Get-SystemUptimeAndBoot {
     Write-Host "Architecture   : $($os.OSArchitecture)" -ForegroundColor White
     
     if($uptime.Days -gt 30) {
-        Write-Host "[INFO] System uptime exceeds 30 days - consider rebooting" -ForegroundColor Yellow
+        Write-Host "(INFO) System uptime exceeds 30 days - consider rebooting" -ForegroundColor Yellow
     }
     
     # Check boot configuration
@@ -478,7 +478,7 @@ function Get-SystemUptimeAndBoot {
     if($shutdownEvents) {
         $shutdownEvents | Format-Table -AutoSize -Wrap
     } else {
-        Write-Host "[INFO] No recent shutdown events found" -ForegroundColor Gray
+        Write-Host "(INFO) No recent shutdown events found" -ForegroundColor Gray
     }
 }
 
@@ -512,13 +512,13 @@ function Get-NetworkLatencyTest {
                 Write-Host "Max Latency    : $maxLatency ms" -ForegroundColor White
                 
                 if($packetLoss -gt 5) {
-                    Write-Host "[WARNING] High packet loss detected - check network connectivity" -ForegroundColor Red
+                    Write-Host "(WARNING) High packet loss detected - check network connectivity" -ForegroundColor Red
                 }
                 if($avgLatency -gt 100) {
-                    Write-Host "[WARNING] High latency detected - network performance may be degraded" -ForegroundColor Yellow
+                    Write-Host "(WARNING) High latency detected - network performance may be degraded" -ForegroundColor Yellow
                 }
             } catch {
-                Write-Host "[ERROR] Unable to ping $($target.IP)" -ForegroundColor Red
+                Write-Host "(ERROR) Unable to ping $($target.IP)" -ForegroundColor Red
             }
         }
     }
@@ -542,7 +542,7 @@ function Get-AntivirusImpact {
             Write-Host "Last Full Scan         : $($defenderStatus.FullScanEndTime)" -ForegroundColor White
         }
     } catch {
-        Write-Host "[INFO] Windows Defender status not available" -ForegroundColor Gray
+        Write-Host "(INFO) Windows Defender status not available" -ForegroundColor Gray
     }
     
     # Check for third-party AV
@@ -555,10 +555,10 @@ function Get-AntivirusImpact {
                 Write-Host "State  : $($av.productState)" -ForegroundColor White
             }
         } else {
-            Write-Host "[INFO] No third-party antivirus detected" -ForegroundColor Gray
+            Write-Host "(INFO) No third-party antivirus detected" -ForegroundColor Gray
         }
     } catch {
-        Write-Host "[INFO] Unable to query antivirus products" -ForegroundColor Gray
+        Write-Host "(INFO) Unable to query antivirus products" -ForegroundColor Gray
     }
     
     # Check AV process resource usage
@@ -567,7 +567,7 @@ function Get-AntivirusImpact {
     if($avProcesses) {
         $avProcesses | Select-Object ProcessName, CPU, @{Name="Memory(MB)";Expression={[math]::Round($_.WorkingSet / 1MB, 2)}} | Format-Table -AutoSize
     } else {
-        Write-Host "[INFO] No active antivirus processes detected" -ForegroundColor Gray
+        Write-Host "(INFO) No active antivirus processes detected" -ForegroundColor Gray
     }
 }
 
@@ -582,7 +582,7 @@ function Get-ProcessHandleAnalysis {
     # Identify potential handle leaks
     $suspiciousProcesses = Get-Process | Where-Object {$_.Handles -gt 10000}
     if($suspiciousProcesses) {
-        Write-Host "`n[WARNING] Processes with Excessive Handles (Potential Leak):" -ForegroundColor Yellow
+        Write-Host "`n(WARNING) Processes with Excessive Handles (Potential Leak):" -ForegroundColor Yellow
         $suspiciousProcesses | Select-Object ProcessName, Handles, Id | Format-Table -AutoSize
     }
     
@@ -594,7 +594,7 @@ function Get-ProcessHandleAnalysis {
         $totalHandles = (Get-Process | Measure-Object -Property Handles -Sum).Sum
         Write-Host "`nTotal System Handles: $totalHandles" -ForegroundColor White
         if($totalHandles -gt 100000) {
-            Write-Host "[INFO] High system handle count - monitor for handle leaks" -ForegroundColor Yellow
+            Write-Host "(INFO) High system handle count - monitor for handle leaks" -ForegroundColor Yellow
         }
     } catch {}
 }
@@ -612,10 +612,10 @@ function Get-ScheduledTasksAnalysis {
         if($tasks) {
             $tasks | Format-Table -AutoSize
         } else {
-            Write-Host "[INFO] No tasks run in the last 24 hours" -ForegroundColor Gray
+            Write-Host "(INFO) No tasks run in the last 24 hours" -ForegroundColor Gray
         }
     } catch {
-        Write-Host "[INFO] Unable to retrieve scheduled tasks" -ForegroundColor Gray
+        Write-Host "(INFO) Unable to retrieve scheduled tasks" -ForegroundColor Gray
     }
     
     Write-Host "`nCurrently Running Scheduled Tasks:" -ForegroundColor Cyan
@@ -624,7 +624,7 @@ function Get-ScheduledTasksAnalysis {
         if($runningTasks) {
             $runningTasks | Select-Object TaskName, State | Format-Table -AutoSize
         } else {
-            Write-Host "[OK] No scheduled tasks currently running" -ForegroundColor Green
+            Write-Host "(OK) No scheduled tasks currently running" -ForegroundColor Green
         }
     } catch {}
     
@@ -636,9 +636,9 @@ function Get-ScheduledTasksAnalysis {
         
         if($failedTasks) {
             $failedTasks | Format-Table -AutoSize
-            Write-Host "[WARNING] Some scheduled tasks have failed - review task history" -ForegroundColor Yellow
+            Write-Host "(WARNING) Some scheduled tasks have failed - review task history" -ForegroundColor Yellow
         } else {
-            Write-Host "[OK] No failed scheduled tasks detected" -ForegroundColor Green
+            Write-Host "(OK) No failed scheduled tasks detected" -ForegroundColor Green
         }
     } catch {}
 }
@@ -655,9 +655,9 @@ function Get-PowerPlanAnalysis {
         
         # Check if High Performance is active
         if($activePlan -match "Power saver") {
-            Write-Host "[WARNING] Power saver mode may reduce system performance" -ForegroundColor Yellow
+            Write-Host "(WARNING) Power saver mode may reduce system performance" -ForegroundColor Yellow
         } elseif($activePlan -match "High performance") {
-            Write-Host "[INFO] High performance mode active - maximum CPU performance" -ForegroundColor Green
+            Write-Host "(INFO) High performance mode active - maximum CPU performance" -ForegroundColor Green
         }
     } catch {}
     
@@ -675,7 +675,7 @@ function Get-PowerPlanAnalysis {
             Write-Host "Battery Health : $($battery.BatteryStatus)" -ForegroundColor White
             Write-Host "Time Remaining : $($battery.EstimatedRunTime) minutes" -ForegroundColor White
         } else {
-            Write-Host "`n[INFO] No battery detected (Desktop system)" -ForegroundColor Gray
+            Write-Host "`n(INFO) No battery detected (Desktop system)" -ForegroundColor Gray
         }
     } catch {}
     
@@ -730,10 +730,10 @@ function Get-DNSPerformanceTest {
     Write-Host "`nAverage DNS Resolution Time: $([math]::Round($avgTime, 2)) ms" -ForegroundColor White
     
     if($avgTime -gt 100) {
-        Write-Host "[WARNING] Slow DNS resolution - consider changing DNS servers" -ForegroundColor Yellow
-        Write-Host "[SUGGESTION] Try Google DNS (8.8.8.8, 8.8.4.4) or Cloudflare DNS (1.1.1.1, 1.0.0.1)" -ForegroundColor Cyan
+        Write-Host "(WARNING) Slow DNS resolution - consider changing DNS servers" -ForegroundColor Yellow
+        Write-Host "(SUGGESTION) Try Google DNS (8.8.8.8, 8.8.4.4) or Cloudflare DNS (1.1.1.1, 1.0.0.1)" -ForegroundColor Cyan
     } else {
-        Write-Host "[OK] DNS resolution performance is good" -ForegroundColor Green
+        Write-Host "(OK) DNS resolution performance is good" -ForegroundColor Green
     }
     
     # DNS cache statistics
@@ -791,7 +791,7 @@ function Export-AuditReport {
     Invoke-FullAudit
     Stop-Transcript
     
-    Write-Host "`n[OK] Report exported successfully to:" -ForegroundColor Green
+    Write-Host "`n(OK) Report exported successfully to:" -ForegroundColor Green
     Write-Host "    $reportPath" -ForegroundColor Cyan
 }
 
@@ -825,12 +825,12 @@ do {
         "19" { Get-PowerPlanAnalysis }
         "20" { Get-DNSPerformanceTest }
         "0"  { 
-            Write-Host "`n[OK] Exiting audit tool. Thank you!" -ForegroundColor Green
+            Write-Host "`n(OK) Exiting audit tool. Thank you!" -ForegroundColor Green
             Start-Sleep -Seconds 1
             break 
         }
         default { 
-            Write-Host "`n[ERROR] Invalid selection. Please choose 0-20." -ForegroundColor Red 
+            Write-Host "`n(ERROR) Invalid selection. Please choose 0-20." -ForegroundColor Red 
         }
     }
     

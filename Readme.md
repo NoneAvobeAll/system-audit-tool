@@ -15,9 +15,10 @@
 
 [Features](#-features) • [Installation](#-installation) • [How to Run](#-how-to-run-this-script) • [Usage](#-usage) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
-![System Audit Banner](https://via.placeholder.com/800x200/0078D6/FFFFFF?text=System+Slowness+Audit+Tool)
+
 
 </div>
+![alt text](image.png)
 
 ---
 
